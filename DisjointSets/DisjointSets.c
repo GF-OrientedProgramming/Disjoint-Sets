@@ -74,5 +74,60 @@ void Union(struct DisjointSet* set, DATATYPE root1, DATATYPE root2)
 		printf("这两个结点已属于同一个集合\n");
 		return;
 	}
+	int i = search2(set, root1);
+	int j = search2(set, root2);
+	if (set->arr[i].parent < 0 && set->arr[j].parent < 0)
+	{
+		if (set->arr[i].parent > set->arr[j].parent) {
+			set->arr[j].parent += set->arr[i].parent;//累加结点数
+			set->arr[i].parent = j;//小树合并到大树
+		}
+		else {
+			set->arr[i].parent += set->arr[j].parent;
+			set->arr[j].parent = i;
+		}
+	}
+	if (set->arr[i].parent >= 0 && set->arr[j].parent >= 0) {
+		i = search(set, root1);
+		j = search(set, root2);
+		if (set->arr[i].parent > set->arr[j].parent) {
+			set->arr[j].parent += set->arr[i].parent;
+			set->arr[i].parent = j;
+		}
+		else {
+			set->arr[i].parent += set->arr[j].parent;
+			set->arr[j].parent = i;
+		}
+	}
 
+	if (set->arr[i].parent > 0 || set->arr[j].parent > 0) {
+		if (set->arr[i].parent > 0) {
+			i = search(set, root1);
+		}
+		else {
+			j = search(set, root2);
+		}
+		if (set->arr[i].parent > set->arr[j].parent) {
+			set->arr[j].parent += set->arr[i].parent;
+			set->arr[i].parent = j;
+		}
+		else {
+			set->arr[i].parent += set->arr[j].parent;
+			set->arr[j].parent = i;
+		}
+	}
+	
+	
+}
+
+
+int search2(struct DisjointSet* set, DATATYPE key)
+{
+	for (int i = 0; i < set->size; i++)
+	{
+		if (set->arr[i].data == key) {
+			return i;
+		}
+	}
+	return -1;
 }
